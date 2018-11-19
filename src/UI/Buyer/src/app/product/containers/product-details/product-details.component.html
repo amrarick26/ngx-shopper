@@ -46,29 +46,16 @@
               <p class="mt-4">{{ product.Description || 'This product has no description.' }}</p>
             </ng-template>
           </ngb-tab>
-          <ngb-tab *ngIf="hasPrice()">
-            <ng-template ngbTabTitle>Price Breaks</ng-template>
+          <ngb-tab *ngIf="isOrderable()"
+                   title="Price Breaks">
             <ng-template ngbTabContent>
-              <table class="mt-4 table table-striped">
-                <tr>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                </tr>
-                <tr *ngFor="let break of product.PriceSchedule.PriceBreaks">
-                  <td>{{ break.Quantity }}</td>
-                  <td>{{ break.Price | currency }}</td>
-                </tr>
-              </table>
+              <product-price-schedule [product]="product"></product-price-schedule>
             </ng-template>
           </ngb-tab>
-          <ngb-tab>
-            <ng-template ngbTabTitle>Specs</ng-template>
+          <ngb-tab *ngIf="specs$ | async; let specs"
+                   title="Specs">
             <ng-template ngbTabContent>
-              <p class="mt-4">Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee.
-                Qui photo booth letterpress,
-                commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan
-                fanny
-                pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+              <product-specs [specs]="specs"></product-specs>
             </ng-template>
           </ngb-tab>
         </ngb-tabset>

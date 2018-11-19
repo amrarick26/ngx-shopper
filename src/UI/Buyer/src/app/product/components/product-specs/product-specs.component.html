@@ -1,0 +1,21 @@
+<form [formGroup]="specForm">
+  <div class="form-group"
+       *ngFor="let spec of specs.Items">
+    <label for="{{spec.ID}}">{{spec.Name}}</label>
+    <select id="{{spec.ID}}"
+            class="form-control"
+            formControlName="{{spec.Name}}">
+      <option [ngValue]="null"
+              [disabled]="spec.Required">None</option>
+      <option *ngFor="let option of spec.Options"
+              [ngValue]="option.ID">
+        {{option.Value}}
+      </option>
+    </select>
+    <input *ngIf="spec.AllowOpenText"
+           type="text"
+           class="form-control"
+           placeholder="Other {{spec.Name}}..."
+           formControlName="{{spec.Name + '_openText'}}" />
+  </div>
+</form>

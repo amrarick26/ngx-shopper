@@ -9,7 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, forkJoin, of } from 'rxjs';
 import { flatMap, tap, catchError } from 'rxjs/operators';
 import { AppLineItemService, AppStateService } from '@app-buyer/shared';
-import { BuyerProduct, OcMeService } from '@ordercloud/angular-sdk';
+import {
+  BuyerProduct,
+  OcMeService,
+  ListBuyerSpec,
+} from '@ordercloud/angular-sdk';
 import { QuantityInputComponent } from '@app-buyer/shared/components/quantity-input/quantity-input.component';
 import { AddToCartEvent } from '@app-buyer/shared/models/add-to-cart-event.interface';
 import { minBy as _minBy } from 'lodash';
@@ -26,6 +30,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
   quantityInputReady = false;
   product: BuyerProduct;
   relatedProducts$: Observable<BuyerProduct[]>;
+  specs$: Observable<ListBuyerSpec>;
   imageUrls: string[] = [];
 
   constructor(
@@ -63,6 +68,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
           return this.ocMeService.GetProduct(params.productID).pipe(
             tap((prod) => {
               this.relatedProducts$ = this.getRelatedProducts(prod);
+              this.specs$ = this.getProductSpecs(prod);
             })
           );
         }
@@ -82,6 +88,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
     return forkJoin(requests);
   }
 
+  getProductSpecs(product: BuyerProduct): Observable<ListBuyerSpec> {
+    return this.ocMeService.ListSpecs(product.ID);
+  }
+
   addToCart(event: AddToCartEvent): void {
     this.appLineItemService
       .create(event.product, event.quantity)
@@ -93,15 +103,6 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
     return !!this.product.PriceSchedule;
   }
 
-  hasPrice(): boolean {
-    // free products dont need to display a price.
-    return (
-      this.product.PriceSchedule &&
-      this.product.PriceSchedule.PriceBreaks.length &&
-      this.product.PriceSchedule.PriceBreaks[0].Price > 0
-    );
-  }
-
   getTotalPrice(): number {
     // In OC, the price per item can depend on the quantity ordered. This info is stored on the PriceSchedule as a list of PriceBreaks.
     // Find the PriceBreak with the highest Quantity less than the quantity ordered. The price on that price break
@@ -109,7 +110,7 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
     if (!this.quantityInputComponent || !this.quantityInputComponent.form) {
       return null;
     }
-    if (!this.hasPrice()) {
+    if (!this.isOrderable()) {
       return 0;
     }
     const quantity = this.quantityInputComponent.form.value.quantity;

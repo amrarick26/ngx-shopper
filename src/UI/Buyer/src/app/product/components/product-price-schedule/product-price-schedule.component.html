@@ -1,0 +1,10 @@
+<table class="mt-4 table table-striped">
+  <tr>
+    <th>Quantity</th>
+    <th>Price</th>
+  </tr>
+  <tr *ngFor="let break of product.PriceSchedule.PriceBreaks">
+    <td>{{ break.Quantity }}</td>
+    <td>{{ break.Price | currency }}</td>
+  </tr>
+</table>
