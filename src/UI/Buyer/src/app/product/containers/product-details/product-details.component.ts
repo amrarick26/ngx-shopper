@@ -127,6 +127,10 @@ export class ProductDetailsComponent implements OnInit, AfterViewChecked {
     return selectedBreak.Price * quantity;
   }
 
+  formChanges(specFormObj) {
+    console.log(specFormObj);
+  }
+
   ngAfterViewChecked() {
     // This manually triggers angular's change detection cycle and avoids the imfamous
     // "Expression has changed after it was checked" error.

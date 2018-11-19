@@ -4,15 +4,18 @@
     <label for="{{spec.ID}}">{{spec.Name}}</label>
     <select id="{{spec.ID}}"
             class="form-control"
-            formControlName="{{spec.Name}}">
+            formControlName="{{spec.Name}}"
+            (change)="evaluateRequiredInputs(spec.Name)">
       <option [ngValue]="null"
               [disabled]="spec.Required">None</option>
       <option *ngFor="let option of spec.Options"
               [ngValue]="option.ID">
         {{option.Value}}
       </option>
+      <option *ngIf="spec.AllowOpenText"
+              value="other">Other...</option>
     </select>
-    <input *ngIf="spec.AllowOpenText"
+    <input *ngIf="specForm.controls[spec.Name].value === 'other'"
            type="text"
            class="form-control"
            placeholder="Other {{spec.Name}}..."

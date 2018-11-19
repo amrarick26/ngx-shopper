@@ -40,15 +40,10 @@ export class ProductSpecsComponent implements OnInit {
     });
 
     this.specForm = this.formBuilder.group(formBody);
-    this.originalForm = this.specForm;
+    this.originalForm = this.originalForm = { ...this.specForm.value };
   }
 
   private onFormChanges() {
-    /**
-     * TODO: write an onChanges function to re-evaluate what input is required when
-     * 1. Spec is required
-     * 2. Allow open text true
-     */
     this.specForm.valueChanges
       .pipe(takeWhile(() => this.alive))
       .subscribe((changes) => {
@@ -68,12 +63,32 @@ export class ProductSpecsComponent implements OnInit {
       if (changes[originalKey] !== originalVal) {
         diff[originalKey] = changes[originalKey];
       }
-      // if (originalKey) {
-      //   const specName = originalKey.slice(0, originalKey.indexOf('_openText'));
-      // }
     });
     return diff;
   }
 
-  private evaluateRequiredInputs() {}
+  evaluateRequiredInputs(specFormName): void {
+    const specName = specFormName.split('_')[0];
+    const isSpecRequired = this.specs.Items.find((s) => s.Name === specName)
+      .Required;
+    //check if there is an open text input for this spec
+    if (this.specForm.controls[`${specName}_openText`] && isSpecRequired) {
+      const isOpenTextRequired =
+        this.specForm.controls[specName].value === 'other';
+      const isSelectionRequired =
+        this.specForm.controls[`${specName}_openText`].value === null;
+      //if the select option is 'other', set the open text input to required and remove validators from select input
+      this.specForm.controls[
+        `${specName}_openText`
+      ].validator = isOpenTextRequired ? Validators.required : null;
+      this.specForm.controls[specName].validator = isSelectionRequired
+        ? Validators.required
+        : null;
+      //update the values and validators set here
+      this.specForm.controls[`${specName}_openText`].updateValueAndValidity();
+      this.specForm.controls[specName].updateValueAndValidity();
+    } else {
+      return;
+    }
+  }
 }
