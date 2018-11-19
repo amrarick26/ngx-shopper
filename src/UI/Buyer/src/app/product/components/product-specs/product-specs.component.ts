@@ -29,10 +29,7 @@ export class ProductSpecsComponent implements OnInit {
     const formBody = {};
 
     this.specs.Items.forEach((spec) => {
-      formBody[spec.Name] = [
-        spec.DefaultOptionID || null,
-        spec.Required ? Validators.required : null,
-      ];
+      formBody[spec.Name] = [null, spec.Required ? Validators.required : null];
 
       if (spec.AllowOpenText) {
         formBody[`${spec.Name}_openText`] = [null, null];
@@ -41,6 +38,7 @@ export class ProductSpecsComponent implements OnInit {
 
     this.specForm = this.formBuilder.group(formBody);
     this.originalForm = this.originalForm = { ...this.specForm.value };
+    this.setDefaultValues();
   }
 
   private onFormChanges() {
@@ -54,6 +52,15 @@ export class ProductSpecsComponent implements OnInit {
           isValid: this.specForm.valid,
         });
       });
+  }
+
+  private setDefaultValues(): void {
+    const specsWithDefaults = this.specs.Items.filter((s) => s.DefaultOptionID);
+    if (specsWithDefaults.length) {
+      specsWithDefaults.forEach((s) => {
+        this.specForm.controls[s.Name].setValue(s.DefaultOptionID);
+      });
+    }
   }
 
   getDiff(changes) {
