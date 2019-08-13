@@ -8,12 +8,9 @@ import {
   Category,
   ListCategory,
   ListFacet,
+  ListLineItem,
 } from '@ordercloud/angular-sdk';
-import {
-  AppLineItemService,
-  AppStateService,
-  ModalService,
-} from '@app-buyer/shared';
+import { CartService, AppStateService, ModalService } from '@app-buyer/shared';
 import { AddToCartEvent } from '@app-buyer/shared/models/add-to-cart-event.interface';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FavoriteProductsService } from '@app-buyer/shared/services/favorites/favorites.service';
@@ -36,12 +33,13 @@ export class ProductListComponent implements OnInit {
   isModalOpen = false;
   createModalID = 'selectCategory';
   facets: ListFacet[];
+  lineItems: ListLineItem;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private ocMeService: OcMeService,
     private router: Router,
-    private appLineItemService: AppLineItemService,
+    private cartService: CartService,
     private favoriteProductsService: FavoriteProductsService,
     private appStateService: AppStateService,
     private modalService: ModalService
@@ -51,6 +49,9 @@ export class ProductListComponent implements OnInit {
     this.productList$ = this.getProductData();
     this.getCategories();
     this.configureRouter();
+    this.appStateService.lineItemSubject.subscribe(
+      (lineItems) => (this.lineItems = lineItems)
+    );
   }
 
   getProductData(): Observable<ListBuyerProduct> {
@@ -209,8 +210,8 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(event: AddToCartEvent) {
-    this.appLineItemService
-      .create(event.product, event.quantity)
+    this.cartService
+      .addToCart(event.product.ID, event.quantity)
       .subscribe(() => this.appStateService.addToCartSubject.next(event));
   }
 

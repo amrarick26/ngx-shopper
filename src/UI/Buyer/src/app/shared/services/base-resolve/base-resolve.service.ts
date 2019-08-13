@@ -13,7 +13,7 @@ import {
   ListLineItem,
   LineItem,
 } from '@ordercloud/angular-sdk';
-import { AppLineItemService } from '@app-buyer/shared/services/line-item/line-item.service';
+import { CartService } from '@app-buyer/shared/services/cart/cart.service';
 import { AppStateService } from '@app-buyer/shared/services/app-state/app-state.service';
 import * as jwtDecode from 'jwt-decode';
 import { isUndefined as _isUndefined } from 'lodash';
@@ -24,12 +24,14 @@ import {
   AppConfig,
 } from '@app-buyer/config/app.config';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class BaseResolveService {
   constructor(
     private appStateService: AppStateService,
     private ocMeService: OcMeService,
-    private appLineItemService: AppLineItemService,
+    private cartService: CartService,
     private ocOrderService: OcOrderService,
     private ocTokenService: OcTokenService,
     @Inject(applicationConfiguration) private appConfig: AppConfig
@@ -65,7 +67,7 @@ export class BaseResolveService {
   private setLineItems(): Observable<ListLineItem> {
     const order = this.appStateService.orderSubject.value;
     if (order.DateCreated) {
-      return this.appLineItemService.listAll(order.ID);
+      return this.cartService.listAllItems(order.ID);
     }
     const lineitemlist = {
       Meta: { Page: 1, PageSize: 25, TotalCount: 0, TotalPages: 1 },
@@ -110,7 +112,7 @@ export class BaseResolveService {
 
   transferAnonymousCart(anonLineItems: ListLineItem): Observable<LineItem[]> {
     const requests = anonLineItems.Items.map((li) =>
-      this.appLineItemService.create(li.xp.product, li.Quantity)
+      this.cartService.addToCart(li.xp.product, li.Quantity)
     );
 
     return forkJoin(requests);

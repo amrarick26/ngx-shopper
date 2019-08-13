@@ -4,12 +4,12 @@
       <div class="col-3 p-0">
         <img class="img-thumbnail"
              appFallbackImage
-             [src]="lineitem.Product?.xp?.imageURLs[0] || 'http://placehold.it/300x300'">
+             [src]="product?.xp?.imageURLs && product?.xp?.imageURLs[0] ? product?.xp?.imageURLs[0] : 'http://placehold.it/300x300'">
       </div>
       <div class="col-9">
         <h6>
           <a [routerLink]="['/products', lineitem.Product.ID]"
-             class="link-text">{{lineitem.Product.Name}}</a>
+             class="link-text">{{lineitem.Product.Name}} {{cartService.buildSpecList(lineitem)}}</a>
 
           <small class="text-muted d-block">{{lineitem.Product.ID}}</small>
         </h6>

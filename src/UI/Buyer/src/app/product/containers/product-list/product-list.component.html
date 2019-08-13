@@ -88,10 +88,10 @@
       <div *ngIf="productList.Items.length > 0">
         <div class="product-list-grid row align-items-stretch">
           <product-product-card *ngFor="let product of productList.Items"
+                                class="col-sm-6 col-md-4 col-xl-3 d-flex"
                                 [product]="product"
                                 [favorite]="favoriteProductsService.isFavorite(product)"
                                 (setFavorite)="favoriteProductsService.setFavoriteValue($event, product)"
-                                class="col-sm-6 col-md-4 col-xl-3 d-flex"
                                 (addedToCart)="addToCart($event)">
           </product-product-card>
         </div>
@@ -101,7 +101,8 @@
                         [collectionSize]="productList.Meta.TotalCount"
                         [pageSize]="productList.Meta.PageSize"
                         [(page)]="productList.Meta.Page"
-                        (pageChange)="changePage($event)"></ngb-pagination>
+                        (pageChange)="changePage($event)"
+                        [rotate]="true"></ngb-pagination>
       </div>
     </div>
   </div>

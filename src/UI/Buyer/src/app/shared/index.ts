@@ -1,5 +1,4 @@
 // components
-export * from '@app-buyer/shared/containers/register/register.component';
 export * from '@app-buyer/shared/components/page-title/page-title.component';
 
 // models
@@ -19,7 +18,7 @@ export * from '@app-buyer/shared/services/authorize-net/authorize-net.service';
 export * from '@app-buyer/shared/services/base-resolve/base-resolve.service';
 export * from '@app-buyer/shared/services/form-error/form-error.service';
 export * from '@app-buyer/shared/services/geography/geography.service';
-export * from '@app-buyer/shared/services/line-item/line-item.service';
+export * from '@app-buyer/shared/services/cart/cart.service';
 export * from '@app-buyer/shared/services/modal/modal.service';
 export * from '@app-buyer/shared/services/reorder/reorder.service';
 export * from '@app-buyer/shared/services/regex/regex.service';
