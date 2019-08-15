@@ -2,7 +2,7 @@
   <address class="card-body row">
     <div class="col-md-8">
       <p *ngIf="addressTitle"><strong>{{ addressTitle }}</strong></p>
-      <div *ngIf="address.AddressName"><strong>{{address.AddressName}}</strong></div>
+      <div *ngIf="address.AddressName"><strong>{{getFullName(address)}}</strong></div>
       <div *ngIf="address.CompanyName">{{address.CompanyName}}</div>
       <div>{{address.FullName}}</div>
       <div>{{address.Street1}}</div>

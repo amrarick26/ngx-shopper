@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Address } from '@ordercloud/angular-sdk';
 
 @Component({
@@ -6,15 +6,11 @@ import { Address } from '@ordercloud/angular-sdk';
   templateUrl: './address-display.component.html',
   styleUrls: ['./address-display.component.scss'],
 })
-export class AddressDisplayComponent implements OnInit {
+export class AddressDisplayComponent {
   @Input() address: Address;
   @Input() addressTitle?: string;
 
-  ngOnInit() {
-    this.address['FullName'] = this.getFullName(this.address);
-  }
-
-  protected getFullName(address: Address) {
+  public getFullName(address: Address) {
     const fullName = `${address.FirstName || ''} ${address.LastName || ''}`;
     return fullName.trim();
   }
