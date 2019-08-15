@@ -9,8 +9,9 @@ import { NgProgressModule } from '@ngx-progressbar/core';
 import { NgProgressHttpModule } from '@ngx-progressbar/http';
 import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
-import { OrderCloudModule } from '@ordercloud/angular-sdk';
-import { OcSDKConfig } from '@app-buyer/config/ordercloud-sdk.config';
+// TODO: AOT FIX https://github.com/angular/angular/issues/23609#issuecomment-386876693
+// import { OrderCloudModule } from '@ordercloud/angular-sdk';
+// import { OcSDKConfig } from '@app-buyer/config/ordercloud-sdk.config';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 // app modules
@@ -25,6 +26,9 @@ import { AppComponent } from '@app-buyer/app.component';
 // static pages
 import { SupportComponent } from './static-pages/support/support.component';
 import { FaqComponent } from './static-pages/faq/faq.component';
+import { PaymentBaseComponent } from './checkout/components/payment-base/payment-base.component';
+import { PhoneFormatPipe } from './shared/pipes/phone-format/phone-format.pipe';
+import { PhoneInputDirective } from './shared/directives/phone-input/phone-input.directive';
 
 // interceptors
 import {
@@ -46,6 +50,9 @@ import { AppErrorHandler } from './config/error-handling.config';
     AppComponent,
     SupportComponent,
     FaqComponent,
+    PaymentBaseComponent,
+    PhoneFormatPipe,
+    PhoneInputDirective,
     TermsAndConditionsComponent,
   ],
   imports: [
@@ -68,7 +75,7 @@ import { AppErrorHandler } from './config/error-handling.config';
     CookieModule.forRoot(),
     NgProgressModule.forRoot(),
     NgProgressHttpModule,
-    OrderCloudModule.forRoot(OcSDKConfig),
+    //OrderCloudModule.forRoot(OcSDKConfig),
     ToastrModule.forRoot(),
     NgxImageZoomModule.forRoot(),
   ],
@@ -93,4 +100,4 @@ import { AppErrorHandler } from './config/error-handling.config';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
