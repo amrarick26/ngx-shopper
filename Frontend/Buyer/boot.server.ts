@@ -11,20 +11,11 @@ import {
 } from '@nguniversal/aspnetcore-engine';
 import { createServerRenderer } from 'aspnet-prerendering';
 import {
-  provideModuleMap,
   MODULE_MAP,
 } from '@nguniversal/module-map-ngfactory-loader';
 
 // Grab the (Node) server-specific NgModule
 import { AppServerModuleNgFactory, LAZY_MODULE_MAP } from './dist/server/main';
-import {
-  CookieService,
-  NgxRequest,
-  NgxResponce,
-  CookieBackendService,
-  CookieOptionsProvider,
-} from '@gorniv/ngx-universal';
-
 /**
  * Access data passed down from aspnet from `params.data`
  * ie: params.data.WHATEVER_YOU_PASSED
@@ -39,20 +30,7 @@ export default createServerRenderer((params) => {
       {
         provide: MODULE_MAP,
         useValue: LAZY_MODULE_MAP,
-      },
-      {
-        provide: NgxRequest,
-        useValue: { cookie: '', headers: {} },
-      },
-      {
-        provide: NgxResponce,
-        useValue: { cookie: '', headers: {} },
-      },
-      {
-        provide: CookieService,
-        useClass: CookieBackendService,
-        deps: [CookieOptionsProvider, NgxRequest, NgxResponce],
-      },
+      }
     ],
   };
 

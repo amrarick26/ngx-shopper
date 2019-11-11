@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { OcTokenService } from '@ordercloud/angular-sdk';
 import * as jwtDecode from 'jwt-decode';
@@ -9,7 +9,6 @@ import { of, Observable } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { AppStateService } from 'src/app/shared/services/app-state/app-state.service';
 import { isPlatformServer } from '@angular/common';
-import { NgxRequest } from '@gorniv/ngx-universal';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +19,6 @@ export class HasTokenGuard implements CanActivate {
     private router: Router,
     private appAuthService: AppAuthService,
     private appStateService: AppStateService,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(NgxRequest) private request: any,
     @Inject(applicationConfiguration) private appConfig: AppConfig
   ) {}
   canActivate(): Observable<boolean> {
@@ -35,12 +32,7 @@ export class HasTokenGuard implements CanActivate {
      */
 
     // check if impersonation supersedes existing tokens to allow impersonating buyers sequentially.
-    let isImpersonating: boolean;
-    if (isPlatformServer(this.platformId)) {
-      isImpersonating = this.request.path === '/impersonation';
-    } else {
-      isImpersonating = window.location.pathname === '/impersonation';
-    }
+    const isImpersonating = window.location.pathname === '/impersonation';
     if (isImpersonating) {
       const match = /token=([^&]*)/.exec(window.location.search);
       if (match) {

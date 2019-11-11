@@ -33,7 +33,8 @@ namespace NgxShopper.Common
                     {
                         cookies = request.Cookies,
                         headers = request.Headers,
-                        host = request.Host
+                        host = request.Host,
+                        path = request.Path
                     },
                     thisCameFromDotNET = "Hi Angular Buyer it's asp.net :)"
                 },
